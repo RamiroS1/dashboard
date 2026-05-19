@@ -4,6 +4,5 @@ __pycache__/
 .env
 .DS_Store
 
-# public/ se regenera en build; index.html y tema sí van al repo
-public/streamlit_app.py
-public/data/
+# santos.json en public/data se copia en build desde data/
+public/data/santos.json

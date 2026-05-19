@@ -2,64 +2,103 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard — Matriz de santos</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@stlite/browser@1.6.0/build/stlite.css"
-    />
-    <script
-      type="module"
-      src="https://cdn.jsdelivr.net/npm/@stlite/browser@1.6.0/build/stlite.js"
-    ></script>
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background: #0f0f12;
-      }
-      #loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        color: #e8e8ed;
-        font-family: system-ui, sans-serif;
-        font-size: 1.1rem;
-      }
-    </style>
+    <link rel="stylesheet" href="./assets/dashboard.css" />
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
+    <script src="./assets/dashboard.js" defer></script>
   </head>
   <body>
-    <div id="loading">Cargando dashboard…</div>
-    <streamlit-app src="./streamlit_app.py">
-      <app-file
-        name="data/Estructura genérica de santos - con datos.xlsx"
-        url="./data/Estructura genérica de santos - con datos.xlsx"
-      ></app-file>
-      <app-file
-        name=".streamlit/config.toml"
-        url="./.streamlit/config.toml"
-      ></app-file>
-      <app-requirements>
-        streamlit
-        pandas
-        openpyxl
-        plotly
-      </app-requirements>
-    </streamlit-app>
-    <script>
-      setTimeout(() => {
-        const el = document.getElementById("loading");
-        if (el) {
-          el.textContent =
-            "Cargando Python en el navegador (puede tardar 1–2 min la primera vez)…";
-        }
-      }, 8000);
-    </script>
+    <div id="loader">Cargando datos…</div>
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>Filtros</h2>
+        <label for="filter-countries">País (Ctrl+clic para varios)</label>
+        <select id="filter-countries" multiple></select>
+
+        <label>Año de nacimiento: <span id="year-min-label"></span> – <span id="year-max-label"></span></label>
+        <input type="range" id="year-min" />
+        <input type="range" id="year-max" />
+
+        <label>Puntuación Total mínima: <span id="min-total-label">0</span></label>
+        <input type="range" id="min-total" />
+
+        <p class="hint">
+          Mapa mundial, KPIs, temas, correlaciones y tabla detalle. Los datos se cargan al instante (sin Python en el navegador).
+        </p>
+      </aside>
+
+      <main class="main">
+        <h1>Matriz de santos</h1>
+        <p class="caption">
+          Análisis exploratorio — fuente: <code id="data-source"></code>
+        </p>
+
+        <div id="empty-msg" class="empty hidden">Sin registros con los filtros actuales.</div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="label">Santos (filtrados)</div><div class="value" id="kpi-n">—</div></div>
+          <div class="kpi"><div class="label">Países</div><div class="value" id="kpi-countries">—</div></div>
+          <div class="kpi"><div class="label">Edad media</div><div class="value" id="kpi-age">—</div></div>
+          <div class="kpi"><div class="label">Año nac. medio</div><div class="value" id="kpi-year">—</div></div>
+          <div class="kpi"><div class="label">Total medio</div><div class="value" id="kpi-total">—</div></div>
+        </div>
+
+        <section>
+          <h2>Mapa mundial</h2>
+          <div class="map-controls">
+            <div>
+              <label for="map-type">Tipo de vista</label>
+              <select id="map-type">
+                <option value="globe">Globo 3D (ortográfico)</option>
+                <option value="flat">Mapa plano (Natural Earth)</option>
+              </select>
+            </div>
+            <div>
+              <label for="map-lon">Orientación · longitud</label>
+              <input type="range" id="map-lon" min="-180" max="180" value="14" step="2" />
+            </div>
+            <div>
+              <label for="map-lat">Orientación · latitud</label>
+              <input type="range" id="map-lat" min="-55" max="72" value="24" step="2" />
+            </div>
+          </div>
+          <div id="chart-map" class="chart"></div>
+        </section>
+
+        <div class="row-2">
+          <section><div id="chart-bar" class="chart sm"></div></section>
+          <section><div id="chart-hist" class="chart sm"></div></section>
+        </div>
+
+        <section>
+          <h2>Dimensiones temáticas</h2>
+          <div class="row-2">
+            <div id="chart-radar" class="chart sm"></div>
+            <div id="chart-theme" class="chart sm"></div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Total vs tiempo y correlaciones</h2>
+          <div class="row-2">
+            <div id="chart-scatter" class="chart sm"></div>
+            <div id="chart-corr" class="chart sm"></div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Explorador de santos</h2>
+          <label for="saint-pick">Seleccionar figura</label>
+          <select id="saint-pick"></select>
+          <div id="saint-detail"></div>
+        </section>
+
+        <section>
+          <h2>Tabla filtrada</h2>
+          <div class="table-wrap" id="data-table"></div>
+        </section>
+      </main>
+    </div>
   </body>
 </html>

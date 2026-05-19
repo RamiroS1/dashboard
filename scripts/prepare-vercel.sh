@@ -1,28 +1,24 @@
 #!/usr/bin/env bash
-# Copia la app y los datos a public/ para el despliegue estático en Vercel.
+# Prepara public/ para Vercel: datos JSON + assets estáticos.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PUBLIC="$ROOT/public"
 
-mkdir -p "$PUBLIC/data" "$PUBLIC/.streamlit"
+mkdir -p "$PUBLIC/data" "$PUBLIC/assets"
 
-cp "$ROOT/streamlit_app.py" "$PUBLIC/"
-cp "$ROOT/data/"*.xlsx "$PUBLIC/data/"
-
-if [[ -d "$ROOT/.streamlit" ]]; then
-  shopt -s nullglob
-  files=("$ROOT/.streamlit"/*)
-  shopt -u nullglob
-  if ((${#files[@]})); then
-    cp -r "${files[@]}" "$PUBLIC/.streamlit/"
-  fi
-fi
-
-if [[ ! -f "$PUBLIC/.streamlit/config.toml" ]]; then
-  echo "Falta config de Streamlit en public/.streamlit/config.toml" >&2
+# Datos: usar JSON ya generado o exportar si hay Python + pandas
+if [[ -f "$ROOT/data/santos.json" ]]; then
+  cp "$ROOT/data/santos.json" "$PUBLIC/data/"
+elif command -v python3 &>/dev/null; then
+  python3 -m pip install -q pandas openpyxl 2>/dev/null || true
+  python3 "$ROOT/scripts/export_data.py"
+else
+  echo "Falta data/santos.json — ejecuta: python scripts/export_data.py" >&2
   exit 1
 fi
+
+# Assets ya están en public/assets/ (versionados en git)
 
 if [[ ! -f "$PUBLIC/index.html" ]]; then
   echo "Falta public/index.html" >&2

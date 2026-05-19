@@ -1,8 +1,8 @@
 # Dashboard — Matriz de santos
 
-Análisis exploratorio de la matriz de santos (Excel) con mapas, KPIs y gráficos Plotly.
+Análisis exploratorio de la matriz de santos con mapas, KPIs y gráficos Plotly.
 
-## Desarrollo local
+## Desarrollo local (Streamlit)
 
 ```bash
 python -m venv .venv
@@ -11,32 +11,29 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-Los datos deben estar en `data/Estructura genérica de santos - con datos.xlsx`.
+## Despliegue en Vercel (recomendado)
 
-## Despliegue en Vercel
+El sitio en producción es **HTML + Plotly.js** (carga en pocos segundos). No usa Python en el navegador.
 
-Vercel no ejecuta servidores Streamlit. Este proyecto se publica como **sitio estático** con [Stlite](https://stlite.net/) (Python/Streamlit en el navegador vía WebAssembly).
+1. Conecta el repo en [Vercel](https://vercel.com).
+2. Framework: **Other** (usa `vercel.json`).
+3. Tras cada deploy, `public/` sirve `index.html` y `data/santos.json`.
 
-1. Conecta el repositorio en [Vercel](https://vercel.com).
-2. **Root Directory:** carpeta `dashboard` (si el repo incluye más carpetas).
-3. **Framework Preset:** Other.
-4. Vercel usará `vercel.json`: el build copia `streamlit_app.py` y `data/` a `public/` y sirve esa carpeta.
-
-Tras el deploy, la primera carga puede tardar 1–2 minutos mientras se descargan las dependencias de Python en el cliente.
-
-### Build manual
+### Actualizar datos del Excel
 
 ```bash
-bash scripts/prepare-vercel.sh
+python scripts/export_data.py   # genera data/santos.json
+git add data/santos.json
+git commit -m "Update santos data"
+git push
 ```
-
-La salida queda en `public/` (incluye `index.html`, `streamlit_app.py`, `data/`, `.streamlit/`).
 
 ## Estructura
 
 | Ruta | Uso |
 |------|-----|
-| `streamlit_app.py` | App Streamlit (local y Stlite; no usar el nombre `app.py` en la raíz: Vercel lo interpreta como función Python) |
-| `data/*.xlsx` | Fuente de datos (incluir en el repo) |
-| `public/index.html` | Entrada Stlite para Vercel |
-| `vercel.json` | Configuración de build y salida |
+| `streamlit_app.py` | App Streamlit para desarrollo local |
+| `public/index.html` | Dashboard web en Vercel |
+| `public/assets/dashboard.js` | Lógica y gráficos |
+| `data/santos.json` | Datos exportados del Excel |
+| `scripts/export_data.py` | Excel → JSON |
