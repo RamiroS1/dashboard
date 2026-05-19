@@ -5,6 +5,6 @@ __pycache__/
 .DS_Store
 
 # public/ se regenera en build; index.html sí va al repo
-public/app.py
+public/streamlit_app.py
 public/data/
 public/.streamlit/

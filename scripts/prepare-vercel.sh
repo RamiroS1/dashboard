@@ -7,7 +7,7 @@ PUBLIC="$ROOT/public"
 
 mkdir -p "$PUBLIC/data" "$PUBLIC/.streamlit"
 
-cp "$ROOT/app.py" "$PUBLIC/"
+cp "$ROOT/streamlit_app.py" "$PUBLIC/"
 cp -r "$ROOT/.streamlit/"* "$PUBLIC/.streamlit/"
 cp "$ROOT/data/"*.xlsx "$PUBLIC/data/"
 

@@ -1,7 +1,7 @@
 """
 Dashboard: Matriz de santos (Excel).
 
-Local:  streamlit run app.py
+Local:  streamlit run streamlit_app.py
 Vercel: sitio estático con Stlite (ver public/index.html y vercel.json).
 """
 
