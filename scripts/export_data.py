@@ -107,14 +107,9 @@ def load_raw() -> pd.DataFrame:
 
 
 def to_records(df: pd.DataFrame) -> list[dict]:
-    import math
-
-    out = df.where(pd.notna(df), None).to_dict(orient="records")
-    for row in out:
-        for k, v in list(row.items()):
-            if isinstance(v, float) and not math.isnan(v) and v == int(v):
-                row[k] = int(v)
-    return out
+    # to_json convierte NaN a null (JSON válido para el navegador)
+    cleaned = df.where(pd.notna(df), None)
+    return json.loads(cleaned.to_json(orient="records"))
 
 
 def main() -> None:
@@ -129,7 +124,7 @@ def main() -> None:
         },
         "records": to_records(df),
     }
-    text = json.dumps(payload, ensure_ascii=False)
+    text = json.dumps(payload, ensure_ascii=False, allow_nan=False)
     for path in OUT_PATHS:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
