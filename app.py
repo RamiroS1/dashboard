@@ -1,6 +1,8 @@
 """
-Dashboard local: Matriz de santos (Excel).
-Ejecutar desde esta carpeta: streamlit run app.py
+Dashboard: Matriz de santos (Excel).
+
+Local:  streamlit run app.py
+Vercel: sitio estático con Stlite (ver public/index.html y vercel.json).
 """
 
 from __future__ import annotations
@@ -12,8 +14,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-ROOT = Path(__file__).resolve().parent.parent
-XLSX_PATH = ROOT / "Estructura genérica de santos - con datos.xlsx"
+ROOT = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "data"
+XLSX_PATH = DATA_DIR / "Estructura genérica de santos - con datos.xlsx"
 SHEET = "Matriz Santos"
 
 COUNTRY_TO_ISO3 = {
@@ -593,5 +596,4 @@ def main() -> None:
     )
 
 
-if __name__ == "__main__":
-    main()
+main()

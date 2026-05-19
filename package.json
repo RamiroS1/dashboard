@@ -1,0 +1,7 @@
+{
+  "name": "dashboard-santos",
+  "private": true,
+  "scripts": {
+    "build": "bash scripts/prepare-vercel.sh"
+  }
+}

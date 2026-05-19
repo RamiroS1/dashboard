@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Dashboard — Matriz de santos</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@stlite/browser@1.6.0/build/stlite.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@stlite/browser@1.6.0/build/stlite.js"
+    ></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #0f0f12;
+      }
+      #loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        color: #e8e8ed;
+        font-family: system-ui, sans-serif;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">Cargando dashboard…</div>
+    <streamlit-app src="./app.py">
+      <app-file
+        name="data/Estructura genérica de santos - con datos.xlsx"
+        url="./data/Estructura genérica de santos - con datos.xlsx"
+      ></app-file>
+      <app-file
+        name=".streamlit/config.toml"
+        url="./.streamlit/config.toml"
+      ></app-file>
+      <app-requirements>
+        streamlit
+        pandas
+        openpyxl
+        plotly
+      </app-requirements>
+    </streamlit-app>
+    <script>
+      setTimeout(() => {
+        const el = document.getElementById("loading");
+        if (el) {
+          el.textContent =
+            "Cargando Python en el navegador (puede tardar 1–2 min la primera vez)…";
+        }
+      }, 8000);
+    </script>
+  </body>
+</html>

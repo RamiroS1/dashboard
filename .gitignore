@@ -3,3 +3,8 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+
+# public/ se regenera en build; index.html sí va al repo
+public/app.py
+public/data/
+public/.streamlit/
